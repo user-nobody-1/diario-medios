@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderItem(item, index) {
     // REGLA 1: Si es un LIBRO con progreso 0, va directamente a la estantería "Want to Read"
     if (parseInt(item.progress) === 0 && item.category === 'literature') {
-        // Seleccionar un color al azar de la lista si no tiene uno asignado
         if (!item.colorClass) {
             item.colorClass = bookColors[Math.floor(Math.random() * bookColors.length)];
         }
@@ -120,7 +119,6 @@ mediaForm.addEventListener('submit', (e) => {
 
     if (!image) image = 'https://placeholder.com';
 
-    // Asignar un color de libro aleatorio si califica como libro pendiente
     let colorClass = '';
     if (parseInt(progress) === 0 && category === 'literature') {
         colorClass = bookColors[Math.floor(Math.random() * bookColors.length)];
@@ -146,20 +144,25 @@ window.deleteJournalItem = function(index) {
     refreshDashboard();
 }
 
-// 8. REFRESCAR EL PANEL COMPLETO
+// 8. REFRESCAR EL PANEL COMPLETO Y ACTUALIZAR CONTADORES
 function refreshDashboard() {
-    // Limpiar tarjetas normales
     document.querySelectorAll('.media-card-horizontal').forEach(el => el.remove());
     
-    // Limpiar portadas de películas pendientes
     const gallerySection = document.getElementById('want-to-view-gallery');
     if (gallerySection) gallerySection.innerHTML = '';
 
-    // Limpiar estantería de libros pendientes
     const bookshelfSection = document.querySelector('.bookshelf');
     if (bookshelfSection) bookshelfSection.innerHTML = '';
 
     const savedItems = JSON.parse(localStorage.getItem('myMediaJournal')) || [];
+    
+    // FILTRADO DE COMPLETADOS: Contamos cuántos tienen progreso igual a 100
+    const completedCount = savedItems.filter(item => parseInt(item.progress) === 100).length;
+    const counterElement = document.getElementById('completed-count');
+    if (counterElement) {
+        counterElement.innerText = completedCount;
+    }
+
     savedItems.forEach((item, index) => renderItem(item, index));
 }
 
@@ -167,26 +170,23 @@ function refreshDashboard() {
 searchBar.addEventListener('input', (e) => {
     const searchText = e.target.value.toLowerCase();
     
-    // Filtrar tarjetas horizontales
     document.querySelectorAll('.media-card-horizontal').forEach(card => {
         const titleText = card.querySelector('.media-title').innerText.toLowerCase();
         card.style.display = titleText.includes(searchText) ? 'flex' : 'none';
     });
 
-    // Filtrar portadas de películas
     document.querySelectorAll('.gallery-card').forEach(card => {
         const imgAlt = card.querySelector('img').alt.toLowerCase();
         card.style.display = imgAlt.includes(searchText) ? 'block' : 'none';
     });
 
-    // Filtrar lomos de libros
     document.querySelectorAll('.book-spine').forEach(book => {
         const bookTitle = book.querySelector('.book-title-vertical').innerText.toLowerCase();
         book.style.display = bookTitle.includes(searchText) ? 'flex' : 'none';
     });
 });
 
-// 10. GESTIÓN DE NOTAS INTERACTIVAS ("NEW ENTRY")
+// 10. GESTIÓN DE NOTAS INTERACTIVAS
 const noteText = document.getElementById('note-text');
 const btnSaveNote = document.getElementById('btn-save-note');
 const savedNotesList = document.getElementById('saved-notes-list');
@@ -227,6 +227,7 @@ window.deleteNote = function(index) {
     localStorage.setItem('myMediaNotes', JSON.stringify(savedNotes));
     renderNotes();
 }
+
 
 
 

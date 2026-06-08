@@ -188,16 +188,22 @@ searchBar.addEventListener('input', (e) => {
 
 // 10. GESTIÓN DE NOTAS INTERACTIVAS
 const noteText = document.getElementById('note-text');
+const noteCategory = document.getElementById('note-category');
 const btnSaveNote = document.getElementById('btn-save-note');
 const savedNotesList = document.getElementById('saved-notes-list');
 
 if (btnSaveNote) {
     btnSaveNote.addEventListener('click', () => {
         const text = noteText.value.trim();
+        const category = noteCategory.value; // Captura la categoría seleccionada (review, quote o reminder)
+        
         if (text === '') return;
 
+        // Estructuramos la nota como un objeto
+        const newNoteObj = { text: text, category: category };
+
         const savedNotes = JSON.parse(localStorage.getItem('myMediaNotes')) || [];
-        savedNotes.push(text);
+        savedNotes.push(newNoteObj);
         localStorage.setItem('myMediaNotes', JSON.stringify(savedNotes));
 
         renderNotes();
@@ -211,9 +217,13 @@ function renderNotes() {
     const savedNotes = JSON.parse(localStorage.getItem('myMediaNotes')) || [];
 
     savedNotes.forEach((note, index) => {
+        // Soporte para notas viejas que solo eran texto plano
+        const textContent = typeof note === 'object' ? note.text : note;
+        const categoryClass = typeof note === 'object' ? `note-${note.category}` : 'note-review';
+
         const noteHTML = `
-            <div class="single-note">
-                <span class="note-content">${note}</span>
+            <div class="single-note ${categoryClass}">
+                <span class="note-content">${textContent}</span>
                 <button class="delete-note-btn" onclick="deleteNote(${index})">✕</button>
             </div>
         `;
@@ -227,10 +237,3 @@ window.deleteNote = function(index) {
     localStorage.setItem('myMediaNotes', JSON.stringify(savedNotes));
     renderNotes();
 }
-
-
-
-
-
-
-

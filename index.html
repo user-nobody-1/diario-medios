@@ -39,10 +39,17 @@
 
         <!-- COLUMNA 2: ENTRADAS Y ARCHIVOS (CENTRO) -->
         <section class="column col-center">
-            <!-- Bloque de Nueva Entrada Interactivo -->
+            <!-- Bloque de Nueva Entrada Interactivo con Categorías de Notas -->
             <div class="section-box white-box">
                 <h2>📝 New Entry</h2>
                 <div class="notes-container">
+                    <label for="note-category" style="font-size: 12px; font-weight: 600; color: #5a6e5f; text-transform: uppercase; display: block; margin-bottom: 4px;">Tipo de Nota:</label>
+                    <select id="note-category" style="padding: 8px; border-radius: 6px; border: 1px solid #c2c9b1; background-color: #fcfdfa; color: #2b3a2f; font-size: 14px; outline: none; margin-bottom: 10px; width: 100%;">
+                        <option value="review">📝 Reseña / Opinión</option>
+                        <option value="quote">💬 Cita / Frase Favorita</option>
+                        <option value="reminder">⏰ Recordatorio / Pendiente</option>
+                    </select>
+
                     <textarea id="note-text" placeholder="Escribe aquí tu reseña o pensamientos del día..."></textarea>
                     <button id="btn-save-note">Guardar Nota</button>
                 </div>
@@ -120,6 +127,7 @@
 
 </body>
 </html>
+
 
 
 

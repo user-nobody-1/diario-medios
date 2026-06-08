@@ -5,6 +5,9 @@ const closeModal = document.getElementById('close-modal');
 const mediaForm = document.getElementById('media-form');
 const searchBar = document.querySelector('.search-bar');
 
+// Lista de colores pastel para los lomos de los libros
+const bookColors = ['book-peach', 'book-mint', 'book-lavender', 'book-yellow', 'book-terracotta'];
+
 // 2. ABRIR Y CERRAR VENTANA FLOTANTE
 btnAdd.addEventListener('click', () => modalForm.style.display = 'flex');
 closeModal.addEventListener('click', () => modalForm.style.display = 'none');
@@ -18,7 +21,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 4. FUNCIÓN PARA DIBUJAR LOS ÍTEMS EN LA PANTALLA
 function renderItem(item, index) {
-    // REGLA INTELIGENTE: Si el progreso es 0 y es de cine/series, va a la galería "Want to View"
+    // REGLA 1: Si es un LIBRO con progreso 0, va directamente a la estantería "Want to Read"
+    if (parseInt(item.progress) === 0 && item.category === 'literature') {
+        // Seleccionar un color al azar de la lista si no tiene uno asignado
+        if (!item.colorClass) {
+            item.colorClass = bookColors[Math.floor(Math.random() * bookColors.length)];
+        }
+        
+        const bookHTML = `
+            <div class="book-spine ${item.colorClass}" data-index="${index}" onclick="deleteJournalItem(${index})">
+                <span class="book-title-vertical">${item.title}</span>
+            </div>
+        `;
+        const bookshelfSection = document.querySelector('.bookshelf');
+        if (bookshelfSection) {
+            bookshelfSection.insertAdjacentHTML('beforeend', bookHTML);
+        }
+        return;
+    }
+
+    // REGLA 2: Si es CINE/SERIE con progreso 0, va a la galería "Want to View"
     if (parseInt(item.progress) === 0 && (item.category === 'cinema' || item.category === 'series')) {
         const galleryHTML = `
             <div class="gallery-card" data-index="${index}">
@@ -30,10 +52,10 @@ function renderItem(item, index) {
         if (gallerySection) {
             gallerySection.insertAdjacentHTML('beforeend', galleryHTML);
         }
-        return; // Terminamos aquí para este ítem
+        return;
     }
 
-    // Si tiene progreso, se dibuja como tarjeta horizontal normal
+    // REGLA 3: Si tiene progreso (mayor a 0), se dibuja como tarjeta normal
     const ratingHTML = item.rating ? `<span class="media-rating">${item.rating}</span>` : '';
 
     const newItemHTML = `
@@ -82,8 +104,6 @@ window.adjustProgress = function(index, amount) {
         savedItems[index] = item;
         
         localStorage.setItem('myMediaJournal', JSON.stringify(savedItems));
-
-        // Si el progreso cambia de 0 a más, o viceversa, redibujamos para cambiarlo de columna automáticamente
         refreshDashboard();
     }
 }
@@ -100,7 +120,13 @@ mediaForm.addEventListener('submit', (e) => {
 
     if (!image) image = 'https://placeholder.com';
 
-    const newItem = { category, title, progress, rating, image };
+    // Asignar un color de libro aleatorio si califica como libro pendiente
+    let colorClass = '';
+    if (parseInt(progress) === 0 && category === 'literature') {
+        colorClass = bookColors[Math.floor(Math.random() * bookColors.length)];
+    }
+
+    const newItem = { category, title, progress, rating, image, colorClass };
 
     const savedItems = JSON.parse(localStorage.getItem('myMediaJournal')) || [];
     savedItems.push(newItem);
@@ -122,11 +148,16 @@ window.deleteJournalItem = function(index) {
 
 // 8. REFRESCAR EL PANEL COMPLETO
 function refreshDashboard() {
-    // Limpiar tarjetas de progreso
+    // Limpiar tarjetas normales
     document.querySelectorAll('.media-card-horizontal').forEach(el => el.remove());
-    // Limpiar portadas de la galería dinámica
+    
+    // Limpiar portadas de películas pendientes
     const gallerySection = document.getElementById('want-to-view-gallery');
     if (gallerySection) gallerySection.innerHTML = '';
+
+    // Limpiar estantería de libros pendientes
+    const bookshelfSection = document.querySelector('.bookshelf');
+    if (bookshelfSection) bookshelfSection.innerHTML = '';
 
     const savedItems = JSON.parse(localStorage.getItem('myMediaJournal')) || [];
     savedItems.forEach((item, index) => renderItem(item, index));
@@ -142,10 +173,16 @@ searchBar.addEventListener('input', (e) => {
         card.style.display = titleText.includes(searchText) ? 'flex' : 'none';
     });
 
-    // Filtrar portadas de la galería
+    // Filtrar portadas de películas
     document.querySelectorAll('.gallery-card').forEach(card => {
         const imgAlt = card.querySelector('img').alt.toLowerCase();
         card.style.display = imgAlt.includes(searchText) ? 'block' : 'none';
+    });
+
+    // Filtrar lomos de libros
+    document.querySelectorAll('.book-spine').forEach(book => {
+        const bookTitle = book.querySelector('.book-title-vertical').innerText.toLowerCase();
+        book.style.display = bookTitle.includes(searchText) ? 'flex' : 'none';
     });
 });
 
@@ -190,6 +227,7 @@ window.deleteNote = function(index) {
     localStorage.setItem('myMediaNotes', JSON.stringify(savedNotes));
     renderNotes();
 }
+
 
 
 

@@ -5,7 +5,6 @@ const closeModal = document.getElementById('close-modal');
 const mediaForm = document.getElementById('media-form');
 const searchBar = document.querySelector('.search-bar');
 
-// Lista de colores pastel para los lomos de los libros
 const bookColors = ['book-peach', 'book-mint', 'book-lavender', 'book-yellow', 'book-terracotta'];
 
 // 2. ABRIR Y CERRAR VENTANA FLOTANTE
@@ -13,33 +12,45 @@ btnAdd.addEventListener('click', () => modalForm.style.display = 'flex');
 closeModal.addEventListener('click', () => modalForm.style.display = 'none');
 window.addEventListener('click', (e) => { if (e.target === modalForm) modalForm.style.display = 'none'; });
 
-// 3. CARGAR ÍTEMS DE LOCALSTORAGE AL INICIAR
+// 3. CARGAR ÍTEMS AL INICIAR
 document.addEventListener('DOMContentLoaded', () => {
     refreshDashboard();
     renderNotes();
+    updateYearlyProgress();
 });
 
-// 4. FUNCIÓN PARA DIBUJAR LOS ÍTEMS EN LA PANTALLA
+// 4. CALCULAR PROGRESO DEL AÑO
+function updateYearlyProgress() {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 1);
+    const diff = now - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    const dayOfYear = Math.floor(diff / oneDay);
+    const totalDays = (now.getFullYear() % 4 === 0) ? 366 : 365;
+    const percentage = Math.floor((dayOfYear / totalDays) * 100);
+
+    const yearlyBar = document.getElementById('yearly-bar');
+    const yearlyText = document.getElementById('yearly-text');
+    if (yearlyBar && yearlyText) {
+        yearlyBar.style.width = `${percentage}%`;
+        yearlyText.innerText = `${percentage}%`;
+    }
+}
+
+// 5. PINTAR ÍTEMS EN PANTALLA
 function renderItem(item, index) {
-    // REGLA 1: Si es un LIBRO con progreso 0, va directamente a la estantería "Want to Read"
     if (parseInt(item.progress) === 0 && item.category === 'literature') {
-        if (!item.colorClass) {
-            item.colorClass = bookColors[Math.floor(Math.random() * bookColors.length)];
-        }
-        
+        if (!item.colorClass) item.colorClass = bookColors[Math.floor(Math.random() * bookColors.length)];
         const bookHTML = `
             <div class="book-spine ${item.colorClass}" data-index="${index}" onclick="deleteJournalItem(${index})">
                 <span class="book-title-vertical">${item.title}</span>
             </div>
         `;
         const bookshelfSection = document.querySelector('.bookshelf');
-        if (bookshelfSection) {
-            bookshelfSection.insertAdjacentHTML('beforeend', bookHTML);
-        }
+        if (bookshelfSection) bookshelfSection.insertAdjacentHTML('beforeend', bookHTML);
         return;
     }
 
-    // REGLA 2: Si es CINE/SERIE con progreso 0, va a la galería "Want to View"
     if (parseInt(item.progress) === 0 && (item.category === 'cinema' || item.category === 'series')) {
         const galleryHTML = `
             <div class="gallery-card" data-index="${index}">
@@ -48,15 +59,11 @@ function renderItem(item, index) {
             </div>
         `;
         const gallerySection = document.getElementById('want-to-view-gallery');
-        if (gallerySection) {
-            gallerySection.insertAdjacentHTML('beforeend', galleryHTML);
-        }
+        if (gallerySection) gallerySection.insertAdjacentHTML('beforeend', galleryHTML);
         return;
     }
 
-    // REGLA 3: Si tiene progreso (mayor a 0), se dibuja como tarjeta normal
     const ratingHTML = item.rating ? `<span class="media-rating">${item.rating}</span>` : '';
-
     const newItemHTML = `
         <div class="media-card-horizontal" data-index="${index}">
             <img src="${item.image}" alt="${item.title}" class="media-cover-small">
@@ -76,41 +83,31 @@ function renderItem(item, index) {
     `;
 
     let targetSection;
-    if (item.category === 'cinema') {
-        targetSection = document.getElementById('section-cinema');
-    } else if (item.category === 'literature') {
-        targetSection = document.getElementById('section-literature'); 
-    } else if (item.category === 'series') {
-        targetSection = document.getElementById('section-series');
-    }
+    if (item.category === 'cinema') targetSection = document.getElementById('section-cinema');
+    else if (item.category === 'literature') targetSection = document.getElementById('section-literature'); 
+    else if (item.category === 'series') targetSection = document.getElementById('section-series');
 
-    if (targetSection) {
-        targetSection.insertAdjacentHTML('beforeend', newItemHTML);
-    }
+    if (targetSection) targetSection.insertAdjacentHTML('beforeend', newItemHTML);
 }
 
-// 5. FUNCIÓN INTERACTIVA PARA SUBIR O BAJAR PROGRESO
+// 6. MODIFICAR PROGRESO (+/-)
 window.adjustProgress = function(index, amount) {
     let savedItems = JSON.parse(localStorage.getItem('myMediaJournal')) || [];
     let item = savedItems[index];
-
     if (item) {
         let newProgress = parseInt(item.progress) + amount;
         if (newProgress < 0) newProgress = 0;
         if (newProgress > 100) newProgress = 100;
-
         item.progress = newProgress;
         savedItems[index] = item;
-        
         localStorage.setItem('myMediaJournal', JSON.stringify(savedItems));
         refreshDashboard();
     }
 }
 
-// 6. ESCUCHAR EL FORMULARIO Y GUARDAR EN LA MEMORIA
+// 7. FORMULARIO DE GUARDADO
 mediaForm.addEventListener('submit', (e) => {
     e.preventDefault();
-
     const category = document.getElementById('category').value;
     const title = document.getElementById('title').value;
     const progress = document.getElementById('progress').value;
@@ -125,18 +122,16 @@ mediaForm.addEventListener('submit', (e) => {
     }
 
     const newItem = { category, title, progress, rating, image, colorClass };
-
     const savedItems = JSON.parse(localStorage.getItem('myMediaJournal')) || [];
     savedItems.push(newItem);
     localStorage.setItem('myMediaJournal', JSON.stringify(savedItems));
 
     refreshDashboard();
-
     mediaForm.reset();
     modalForm.style.display = 'none';
 });
 
-// 7. ELIMINAR UN ELEMENTO ESPECÍFICO
+// 8. BORRAR ÍTEM
 window.deleteJournalItem = function(index) {
     let savedItems = JSON.parse(localStorage.getItem('myMediaJournal')) || [];
     savedItems.splice(index, 1);
@@ -144,49 +139,40 @@ window.deleteJournalItem = function(index) {
     refreshDashboard();
 }
 
-// 8. REFRESCAR EL PANEL COMPLETO Y ACTUALIZAR CONTADORES
+// 9. REFRESCAR PANEL GENERAL
 function refreshDashboard() {
     document.querySelectorAll('.media-card-horizontal').forEach(el => el.remove());
-    
     const gallerySection = document.getElementById('want-to-view-gallery');
     if (gallerySection) gallerySection.innerHTML = '';
-
     const bookshelfSection = document.querySelector('.bookshelf');
     if (bookshelfSection) bookshelfSection.innerHTML = '';
 
     const savedItems = JSON.parse(localStorage.getItem('myMediaJournal')) || [];
-    
-    // FILTRADO DE COMPLETADOS: Contamos cuántos tienen progreso igual a 100
     const completedCount = savedItems.filter(item => parseInt(item.progress) === 100).length;
     const counterElement = document.getElementById('completed-count');
-    if (counterElement) {
-        counterElement.innerText = completedCount;
-    }
+    if (counterElement) counterElement.innerText = completedCount;
 
     savedItems.forEach((item, index) => renderItem(item, index));
 }
 
-// 9. FUNCIÓN DEL BUSCADOR
+// 10. FILTRADO DEL BUSCADOR
 searchBar.addEventListener('input', (e) => {
     const searchText = e.target.value.toLowerCase();
-    
     document.querySelectorAll('.media-card-horizontal').forEach(card => {
         const titleText = card.querySelector('.media-title').innerText.toLowerCase();
         card.style.display = titleText.includes(searchText) ? 'flex' : 'none';
     });
-
     document.querySelectorAll('.gallery-card').forEach(card => {
         const imgAlt = card.querySelector('img').alt.toLowerCase();
         card.style.display = imgAlt.includes(searchText) ? 'block' : 'none';
     });
-
     document.querySelectorAll('.book-spine').forEach(book => {
         const bookTitle = book.querySelector('.book-title-vertical').innerText.toLowerCase();
         book.style.display = bookTitle.includes(searchText) ? 'flex' : 'none';
     });
 });
 
-// 10. GESTIÓN DE NOTAS INTERACTIVAS
+// 11. ENTRADAS DE NOTAS
 const noteText = document.getElementById('note-text');
 const noteCategory = document.getElementById('note-category');
 const btnSaveNote = document.getElementById('btn-save-note');
@@ -195,17 +181,12 @@ const savedNotesList = document.getElementById('saved-notes-list');
 if (btnSaveNote) {
     btnSaveNote.addEventListener('click', () => {
         const text = noteText.value.trim();
-        const category = noteCategory.value; // Captura la categoría seleccionada (review, quote o reminder)
-        
+        const category = noteCategory.value;
         if (text === '') return;
-
-        // Estructuramos la nota como un objeto
         const newNoteObj = { text: text, category: category };
-
         const savedNotes = JSON.parse(localStorage.getItem('myMediaNotes')) || [];
         savedNotes.push(newNoteObj);
         localStorage.setItem('myMediaNotes', JSON.stringify(savedNotes));
-
         renderNotes();
         noteText.value = '';
     });
@@ -215,25 +196,10 @@ function renderNotes() {
     if (!savedNotesList) return;
     savedNotesList.innerHTML = '';
     const savedNotes = JSON.parse(localStorage.getItem('myMediaNotes')) || [];
-
     savedNotes.forEach((note, index) => {
-        // Soporte para notas viejas que solo eran texto plano
         const textContent = typeof note === 'object' ? note.text : note;
         const categoryClass = typeof note === 'object' ? `note-${note.category}` : 'note-review';
-
         const noteHTML = `
             <div class="single-note ${categoryClass}">
-                <span class="note-content">${textContent}</span>
-                <button class="delete-note-btn" onclick="deleteNote(${index})">✕</button>
-            </div>
-        `;
-        savedNotesList.insertAdjacentHTML('beforeend', noteHTML);
-    });
-}
-
-window.deleteNote = function(index) {
-    let savedNotes = JSON.parse(localStorage.getItem('myMediaNotes')) || [];
-    savedNotes.splice(index, 1);
-    localStorage.setItem('myMediaNotes', JSON.stringify(savedNotes));
-    renderNotes();
-}
+                <span class="note-content">${textContent}
+    

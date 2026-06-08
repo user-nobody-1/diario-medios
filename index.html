@@ -10,9 +10,19 @@
 
     <!-- Encabezado de la página -->
     <header class="main-header">
-        <h1 class="logo-title">My Media Journal</h1>
+        <div class="header-left-group">
+            <h1 class="logo-title">My Media Journal</h1>
+            <!-- Barra de progreso anual automática -->
+            <div class="yearly-progress-wrapper">
+                <span class="yearly-label">Progreso Anual 2026:</span>
+                <div class="yearly-progress-container">
+                    <div class="yearly-progress-bar" id="yearly-bar" style="width: 0%;"></div>
+                </div>
+                <span id="yearly-text" class="yearly-percentage">0%</span>
+            </div>
+        </div>
         <div class="header-right">
-            <!-- CONTADOR DE ÍTEMS COMPLETADOS AL 100% INTEGRADO -->
+            <!-- Contador de ítems completados al 100% -->
             <div class="completion-counter">🏆 Completados: <span id="completed-count">0</span></div>
             <input type="search" placeholder="🔍 Buscar..." class="search-bar">
             <button class="btn-add">+ Add Item</button>
@@ -39,7 +49,7 @@
 
         <!-- COLUMNA 2: ENTRADAS Y ARCHIVOS (CENTRO) -->
         <section class="column col-center">
-            <!-- Bloque de Nueva Entrada Interactivo con Categorías de Notas -->
+            <!-- Bloque de Nueva Entrada Interactivo con Categorías -->
             <div class="section-box white-box">
                 <h2>📝 New Entry</h2>
                 <div class="notes-container">
@@ -61,7 +71,7 @@
             <div class="section-box white-box">
                 <h2>Want to View 🎬</h2>
                 <div class="image-gallery" id="want-to-view-gallery">
-                    <!-- Las portadas dinámicas que agregues con 0% de progreso aparecerán aquí automáticamente -->
+                    <!-- Las portadas dinámicas con 0% aparecerán aquí -->
                 </div>
             </div>
 
@@ -69,7 +79,7 @@
             <div class="section-box white-box bookmark-section">
                 <h2>Want to Read 📚</h2>
                 <div class="bookshelf">
-                    <!-- Los lomos de tus libros reales con 0% de progreso aparecerán aquí automáticamente -->
+                    <!-- Los lomos de tus libros reales con 0% aparecerán aquí -->
                 </div>
             </div>
         </section>
@@ -85,7 +95,7 @@
 
     </main>
 
-    <!-- VENTANA FLOTANTE (FORMULARIO TOTALMENTE CORREGIDO) -->
+    <!-- VENTANA FLOTANTE (FORMULARIO Y RESPALDO) -->
     <div id="modal-form" class="modal">
         <div class="modal-content">
             <span class="close-btn" id="close-modal">&times;</span>
@@ -119,6 +129,16 @@
 
                 <button type="submit" class="btn-submit">Guardar en mi Diario</button>
             </form>
+
+            <!-- Zona de Copia de Seguridad -->
+            <div class="backup-zone">
+                <h3>💾 Copia de Seguridad</h3>
+                <div class="backup-buttons">
+                    <button id="btn-export" class="btn-backup-action">Exportar Datos</button>
+                    <label for="btn-import" class="btn-backup-action label-import">Importar Datos</label>
+                    <input type="file" id="btn-import" accept=".json" style="display: none;">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -127,6 +147,8 @@
 
 </body>
 </html>
+
+
 
 
 

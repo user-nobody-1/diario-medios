@@ -376,6 +376,13 @@ h3 { font-size: 12px; color: #5a6e5f; margin-bottom: 12px; text-transform: upper
 .delete-note-btn:hover {
     color: #bf5e3b;
 }
+/* ESTILOS PARA LAS ESTRELLAS DE CALIFICACIÓN */
+.media-rating {
+    font-size: 13px;
+    margin-left: 6px;
+    color: #ffb703; /* Color amarillo dorado para resaltar las estrellas */
+    font-weight: normal;
+}
 
 
 

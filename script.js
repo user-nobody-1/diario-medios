@@ -17,11 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 4. FUNCIÓN PARA DIBUJAR LOS ÍTEMS EN LA PANTALLA
 function renderItem(item, index) {
+    // Si el ítem tiene calificación, la preparamos para el HTML
+    const ratingHTML = item.rating ? `<span class="media-rating">${item.rating}</span>` : '';
+
     const newItemHTML = `
         <div class="media-card-horizontal" data-index="${index}">
             <img src="${item.image}" alt="${item.title}" class="media-cover-small">
             <div class="media-info">
-                <span class="media-title">${item.title}</span>
+                <span class="media-title">${item.title} ${ratingHTML}</span>
                 <div class="progress-wrapper">
                     <button class="step-btn" onclick="adjustProgress(${index}, -5)">-</button>
                     <div class="progress-container">
@@ -76,11 +79,12 @@ mediaForm.addEventListener('submit', (e) => {
     const category = document.getElementById('category').value;
     const title = document.getElementById('title').value;
     const progress = document.getElementById('progress').value;
+    const rating = document.getElementById('rating').value; // Captura las estrellas
     let image = document.getElementById('image').value;
 
     if (!image) image = 'https://placeholder.com';
 
-    const newItem = { category, title, progress, image };
+    const newItem = { category, title, progress, rating, image };
 
     const savedItems = JSON.parse(localStorage.getItem('myMediaJournal')) || [];
     savedItems.push(newItem);
@@ -121,31 +125,29 @@ searchBar.addEventListener('input', (e) => {
         }
     });
 });
-// ==========================================
+
 // 10. GESTIÓN DE NOTAS INTERACTIVAS ("NEW ENTRY")
-// ==========================================
 const noteText = document.getElementById('note-text');
 const btnSaveNote = document.getElementById('btn-save-note');
 const savedNotesList = document.getElementById('saved-notes-list');
 
-// Escuchar el clic del botón de guardar nota
-btnSaveNote.addEventListener('click', () => {
-    const text = noteText.value.trim();
-    if (text === '') return; // Si está vacío no hace nada
+if (btnSaveNote) {
+    btnSaveNote.addEventListener('click', () => {
+        const text = noteText.value.trim();
+        if (text === '') return;
 
-    // Obtener notas viejas, sumar la nueva y guardar en memoria
-    const savedNotes = JSON.parse(localStorage.getItem('myMediaNotes')) || [];
-    savedNotes.push(text);
-    localStorage.setItem('myMediaNotes', JSON.stringify(savedNotes));
+        const savedNotes = JSON.parse(localStorage.getItem('myMediaNotes')) || [];
+        savedNotes.push(text);
+        localStorage.setItem('myMediaNotes', JSON.stringify(savedNotes));
 
-    // Dibujar las notas actualizadas y limpiar el cuadro
-    renderNotes();
-    noteText.value = '';
-});
+        renderNotes();
+        noteText.value = '';
+    });
+}
 
-// Función para pintar todas las notas en pantalla
 function renderNotes() {
-    savedNotesList.innerHTML = ''; // Limpiar lista visual
+    if (!savedNotesList) return;
+    savedNotesList.innerHTML = '';
     const savedNotes = JSON.parse(localStorage.getItem('myMediaNotes')) || [];
 
     savedNotes.forEach((note, index) => {
@@ -159,7 +161,6 @@ function renderNotes() {
     });
 }
 
-// Función global para eliminar una nota de la memoria
 window.deleteNote = function(index) {
     let savedNotes = JSON.parse(localStorage.getItem('myMediaNotes')) || [];
     savedNotes.splice(index, 1);
@@ -167,10 +168,10 @@ window.deleteNote = function(index) {
     renderNotes();
 }
 
-// Asegurarse de cargar las notas existentes cuando se abre el sitio web
 document.addEventListener('DOMContentLoaded', () => {
     renderNotes();
 });
+
 
 
 

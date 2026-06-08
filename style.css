@@ -1,0 +1,382 @@
+/* RESET GENERAL Y FUENTES */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #ededde; /* Fondo general beige claro/crema del boceto */
+    color: #2b3a2f; /* Texto oscuro en tono verde pino */
+    padding: 24px;
+}
+
+/* ENCABEZADO */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 15px;
+    border-bottom: 2px solid #d9decb;
+    padding-bottom: 16px;
+}
+
+.logo-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #2b3a2f;
+    letter-spacing: -0.5px;
+}
+
+.header-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.search-bar {
+    background-color: #ffffff;
+    border: 1px solid #c2c9b1;
+    padding: 10px 16px;
+    border-radius: 20px;
+    color: #2b3a2f;
+    outline: none;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.search-bar:focus {
+    border-1px solid #bf5e3b;
+    box-shadow: 0 0 0 3px rgba(191, 94, 59, 0.2);
+}
+
+.btn-add {
+    background-color: #bf5e3b; /* Naranja terracota llamativo para el botón de acción */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(191, 94, 59, 0.2);
+    transition: background 0.2s;
+}
+
+.btn-add:hover {
+    background-color: #a34b2b;
+}
+
+/* CUADRÍCULA PRINCIPAL */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Colores de fondo por columna basados en tu imagen */
+.col-cinema { background-color: #c9d3c4; padding: 18px; border-radius: 16px; border: 1px solid #b3beae; } /* Verde Oliva Suave */
+.col-center { background-color: #dfebd9; padding: 18px; border-radius: 16px; border: 1px solid #cbdab5; } /* Verde Claro */
+.col-series { background-color: #e6ccbe; padding: 18px; border-radius: 16px; border: 1px solid #d4b4a2; } /* Café/Naranja Suave */
+
+.section-box {
+    background-color: rgba(255, 255, 255, 0.4); /* Cajas semi-transparentes claras */
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+/* Estilo impecable para las tarjetas blancas centrales */
+.white-box {
+    background-color: #ffffff;
+    color: #2b3a2f;
+    border: 1px solid #e1e6d5;
+}
+
+h2 { font-size: 20px; color: #2b3a2f; margin-bottom: 14px; font-weight: 700; }
+h3 { font-size: 12px; color: #5a6e5f; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
+.white-box h3 { color: #78877c; }
+
+/* TARJETAS HORIZONTALES DINÁMICAS */
+.media-card-horizontal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    gap: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.media-cover-small {
+    width: 48px;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.media-info {
+    flex-grow: 1;
+}
+
+.media-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2b3a2f;
+}
+
+.progress-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+}
+
+.step-btn {
+    background-color: #ededde;
+    color: #2b3a2f;
+    border: 1px solid #c2c9b1;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-btn:hover { background-color: #bf5e3b; color: white; border-color: #bf5e3b; }
+
+.progress-container {
+    flex-grow: 1;
+    background-color: #ededde;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background-color: #bf5e3b; /* Progreso en terracota */
+    height: 100%;
+    border-radius: 3px;
+}
+
+.percentage {
+    display: block;
+    font-size: 12px;
+    color: #5a6e5f;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.delete-item-btn {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+}
+
+.delete-item-btn:hover { opacity: 1; }
+
+/* GALERÍA CENTRAL */
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.gallery-card { position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 3px 6px rgba(0,0,0,0.08); }
+.gallery-card img { width: 100%; height: 115px; object-fit: cover; display: block; }
+
+.delete-btn-small {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(43, 58, 47, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* ESTANTERÍA DE LIBROS PENDIENTES */
+.bookmark-section { margin-top: 10px; }
+.bookshelf {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    background-color: #fcfdfa;
+    padding: 20px 15px 10px 15px;
+    border-radius: 10px;
+    min-height: 180px;
+    border: 1px solid #ededde;
+}
+
+.book-spine {
+    width: 32px;
+    height: 140px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset -3px 0 5px rgba(0, 0, 0, 0.05), 2px 0 5px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.book-spine:hover { transform: translateY(-6px); }
+.book-title-vertical { transform: rotate(-90deg); white-space: nowrap; font-size: 11px; font-weight: 600; color: #404e44; text-transform: uppercase; }
+
+/* Tonos Pastel del Boceto */
+.book-peach { background-color: #f5c2b0; height: 145px; }
+.book-mint { background-color: #ccebdf; height: 130px; }
+.book-lavender { background-color: #dbdaf2; height: 150px; }
+.book-yellow { background-color: #faecc0; height: 135px; }
+.book-terracotta { background-color: #eba99b; height: 142px; }
+
+/* VENTANA MODAL (FORMULARIO) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(43, 58, 47, 0.4);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    border: 1px solid #cbdab5;
+    padding: 28px;
+    border-radius: 16px;
+    width: 95%;
+    max-width: 440px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(43, 58, 47, 0.15);
+    color: #2b3a2f;
+}
+
+.close-btn { position: absolute; right: 20px; top: 18px; font-size: 26px; cursor: pointer; color: #8fa093; }
+.close-btn:hover { color: #2b3a2f; }
+
+#media-form { display: flex; flex-direction: column; gap: 14px; margin-top: 15px; }
+#media-form label { font-size: 13px; color: #5a6e5f; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+#media-form input, #media-form select { padding: 11px; border-radius: 8px; border: 1px solid #c2c9b1; background-color: #fcfdfa; color: #2b3a2f; font-size: 16px; outline: none; }
+#media-form input:focus, #media-form select:focus { border-color: #bf5e3b; }
+.btn-submit { background-color: #bf5e3b; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; margin-top: 10px; }
+.btn-submit:hover { background-color: #a34b2b; }
+
+/* VISTA SMARTPHONE (IPHONE) */
+@media (max-width: 900px) {
+    body { padding: 16px; }
+    .dashboard-grid { grid-template-columns: 1fr; gap: 16px; }
+    .main-header { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+    .header-right { width: 100%; }
+    .search-bar { flex-grow: 1; }
+}
+/* ESTILOS PARA LA BITÁCORA DE NOTAS ("NEW ENTRY") */
+
+.notes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#note-text {
+    width: 100%;
+    height: 90px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #c2c9b1;
+    background-color: #fcfdfa;
+    color: #2b3a2f;
+    font-size: 15px;
+    resize: none; /* Evita que el usuario deforme la caja en PC */
+    outline: none;
+}
+
+#note-text:focus {
+    border-color: #bf5e3b;
+}
+
+#btn-save-note {
+    background-color: #2b3a2f; /* Botón verde oscuro contrastante */
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    align-self: flex-end; /* Lo alinea a la derecha */
+    transition: background 0.2s;
+}
+
+#btn-save-note:hover {
+    background-color: #1a241d;
+}
+
+/* Estilo para las notas ya guardadas en la lista */
+.single-note {
+    background-color: #f7f9f4;
+    border-left: 3px solid #bf5e3b; /* Línea terracota decorativa al lado */
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #3d4f42;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.note-content {
+    white-space: pre-wrap; /* Respeta los saltos de línea al escribir */
+    word-break: break-word;
+}
+
+.delete-note-btn {
+    background: transparent;
+    border: none;
+    color: #8fa093;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.delete-note-btn:hover {
+    color: #bf5e3b;
+}
+
+
+
+

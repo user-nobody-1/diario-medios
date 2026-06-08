@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Media Journal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Encabezado de la página -->
+    <header class="main-header">
+        <h1 class="logo-title">My Media Journal</h1>
+        <div class="header-right">
+            <input type="search" placeholder="🔍 Buscar..." class="search-bar">
+            <button class="btn-add">+ Add Item</button>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <main class="dashboard-grid">
+        
+        <!-- COLUMNA 1: CINE Y LITERATURA -->
+        <section class="column col-cinema">
+            <div class="section-box" id="section-cinema">
+                <h2>Cinema & Film 🎬</h2>
+                <h3>Watching</h3>
+                <!-- Los ítems dinámicos aparecerán aquí -->
+            </div>
+            
+            <div class="section-box" id="section-literature">
+                <h2>Literature & Reads 📚</h2>
+                <h3>Currently Reading</h3>
+                <!-- Los ítems dinámicos aparecerán aquí -->
+            </div>
+        </section>
+
+        <!-- COLUMNA 2: ENTRADAS Y ARCHIVOS (CENTRO) -->
+        <section class="column col-center">
+            <div class="section-box white-box">
+                <h2>📝 New Entry</h2>
+                <p class="placeholder-text">¿Qué quieres registrar hoy?</p>
+            </div>
+            
+            <div class="section-box white-box">
+                 <h2>📝 New Entry</h2>
+                <div class="notes-container">
+                    <textarea id="note-text" placeholder="Escribe aquí tu reseña o pensamientos del día..."></textarea>
+                    <button id="btn-save-note">Guardar Nota</button>
+                </div>
+                <!-- Aquí se irán acumulando tus notas guardadas -->
+                <div id="saved-notes-list"></div>
+                </div>
+                <h2>Want to View 🎬</h2>
+                <div class="image-gallery" id="want-to-view-gallery">
+                    <div class="gallery-card">
+                        <img src="https://justwatch.com" alt="Poor Things">
+                        <button class="delete-btn-small" onclick="this.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="gallery-card">
+                        <img src="https://media-amazon.com" alt="The Bear">
+                        <button class="delete-btn-small" onclick="this.parentElement.remove()">&times;</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-box white-box bookmark-section">
+                <h2>Want to Read 📚</h2>
+                <div class="bookshelf">
+                    <div class="book-spine book-peach"><span class="book-title-vertical">The Secret History</span></div>
+                    <div class="book-spine book-mint"><span class="book-title-vertical">Klara and the Sun</span></div>
+                    <div class="book-spine book-lavender"><span class="book-title-vertical">Crying in H Mart</span></div>
+                    <div class="book-spine book-yellow"><span class="book-title-vertical">Normal People</span></div>
+                    <div class="book-spine book-terracotta"><span class="book-title-vertical">Tomorrow, x3</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COLUMNA 3: SERIES -->
+        <section class="column col-series">
+            <div class="section-box" id="section-series">
+                <h2>Serialized Stories 📺</h2>
+                <h3>Currently Airing</h3>
+                <!-- Los ítems dinámicos aparecerán aquí -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- VENTANA FLOTANTE (FORMULARIO) -->
+    <div id="modal-form" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2>Agregar Nuevo Ítem</h2>
+            <form id="media-form">
+                <label for="category">Categoría:</label>
+                <select id="category" required>
+                    <option value="cinema">🎬 Cinema & Film</option>
+                    <option value="literature">📚 Literature & Reads</option>
+                    <option value="series">📺 Serialized Stories</option>
+                </select>
+
+                <label for="title">Título:</label>
+                <input type="text" id="title" placeholder="Ej. Inception" required>
+
+                <label for="progress">Progreso (%):</label>
+                <input type="number" id="progress" min="0" max="100" value="0" required>
+
+                <label for="image">Enlace de la imagen (URL de internet):</label>
+                <input type="url" id="image" placeholder="https://ejemplo.com">
+
+                <button type="submit" class="btn-submit">Guardar en mi Diario</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ENLACE AL SCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+</html>
+
+

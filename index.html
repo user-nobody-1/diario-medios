@@ -37,20 +37,19 @@
 
         <!-- COLUMNA 2: ENTRADAS Y ARCHIVOS (CENTRO) -->
         <section class="column col-center">
+            <!-- Bloque de Nueva Entrada Interactivo -->
             <div class="section-box white-box">
                 <h2>📝 New Entry</h2>
-                <p class="placeholder-text">¿Qué quieres registrar hoy?</p>
-            </div>
-            
-            <div class="section-box white-box">
-                 <h2>📝 New Entry</h2>
                 <div class="notes-container">
                     <textarea id="note-text" placeholder="Escribe aquí tu reseña o pensamientos del día..."></textarea>
                     <button id="btn-save-note">Guardar Nota</button>
                 </div>
                 <!-- Aquí se irán acumulando tus notas guardadas -->
                 <div id="saved-notes-list"></div>
-                </div>
+            </div>
+            
+            <!-- Bloque de Galería Visual "Want to View" -->
+            <div class="section-box white-box">
                 <h2>Want to View 🎬</h2>
                 <div class="image-gallery" id="want-to-view-gallery">
                     <div class="gallery-card">
@@ -64,6 +63,7 @@
                 </div>
             </div>
 
+            <!-- Bloque de Libros Pendientes "Want to Read" -->
             <div class="section-box white-box bookmark-section">
                 <h2>Want to Read 📚</h2>
                 <div class="bookshelf">
@@ -87,7 +87,7 @@
 
     </main>
 
-    <!-- VENTANA FLOTANTE (FORMULARIO) -->
+    <!-- VENTANA FLOTANTE (FORMULARIO TOTALMENTE CORREGIDO) -->
     <div id="modal-form" class="modal">
         <div class="modal-content">
             <span class="close-btn" id="close-modal">&times;</span>
@@ -106,33 +106,15 @@
                 <label for="progress">Progreso (%):</label>
                 <input type="number" id="progress" min="0" max="100" value="0" required>
 
-                <!-- NUEVA CASILLA: CALIFICACIÓN POR ESTRELLAS -->
                 <label for="rating">Calificación:</label>
                 <select id="rating">
                     <option value="">Sin calificar</option>
                     <option value="⭐">⭐ (1/5)</option>
                     <option value="⭐⭐">⭐⭐ (2/5)</option>
-                    <option value="⭐⭐ Bak">⭐⭐⭐ (3/5)</option>
+                    <option value="⭐⭐⭐">⭐⭐⭐ (3/5)</option>
                     <option value="⭐⭐⭐⭐">⭐⭐⭐⭐ (4/5)</option>
                     <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐ (5/5)</option>
                 </select>
-
-                <label for="image">Enlace de la imagen (URL de internet):</label>
-                <input type="url" id="image" placeholder="https://ejemplo.com">
-
-                <button type="submit" class="btn-submit">Guardar en mi Diario</button>
-                <label for="category">Categoría:</label>
-                <select id="category" required>
-                    <option value="cinema">🎬 Cinema & Film</option>
-                    <option value="literature">📚 Literature & Reads</option>
-                    <option value="series">📺 Serialized Stories</option>
-                </select>
-
-                <label for="title">Título:</label>
-                <input type="text" id="title" placeholder="Ej. Inception" required>
-
-                <label for="progress">Progreso (%):</label>
-                <input type="number" id="progress" min="0" max="100" value="0" required>
 
                 <label for="image">Enlace de la imagen (URL de internet):</label>
                 <input type="url" id="image" placeholder="https://ejemplo.com">
@@ -147,5 +129,6 @@
 
 </body>
 </html>
+
 
 

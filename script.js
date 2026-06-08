@@ -13,11 +13,27 @@ window.addEventListener('click', (e) => { if (e.target === modalForm) modalForm.
 // 3. CARGAR ÍTEMS DE LOCALSTORAGE AL INICIAR
 document.addEventListener('DOMContentLoaded', () => {
     refreshDashboard();
+    renderNotes();
 });
 
 // 4. FUNCIÓN PARA DIBUJAR LOS ÍTEMS EN LA PANTALLA
 function renderItem(item, index) {
-    // Si el ítem tiene calificación, la preparamos para el HTML
+    // REGLA INTELIGENTE: Si el progreso es 0 y es de cine/series, va a la galería "Want to View"
+    if (parseInt(item.progress) === 0 && (item.category === 'cinema' || item.category === 'series')) {
+        const galleryHTML = `
+            <div class="gallery-card" data-index="${index}">
+                <img src="${item.image}" alt="${item.title}">
+                <button class="delete-btn-small" onclick="deleteJournalItem(${index})">&times;</button>
+            </div>
+        `;
+        const gallerySection = document.getElementById('want-to-view-gallery');
+        if (gallerySection) {
+            gallerySection.insertAdjacentHTML('beforeend', galleryHTML);
+        }
+        return; // Terminamos aquí para este ítem
+    }
+
+    // Si tiene progreso, se dibuja como tarjeta horizontal normal
     const ratingHTML = item.rating ? `<span class="media-rating">${item.rating}</span>` : '';
 
     const newItemHTML = `
@@ -67,8 +83,8 @@ window.adjustProgress = function(index, amount) {
         
         localStorage.setItem('myMediaJournal', JSON.stringify(savedItems));
 
-        document.getElementById(`bar-${index}`).style.width = `${newProgress}%`;
-        document.getElementById(`text-${index}`).innerText = `${newProgress}%`;
+        // Si el progreso cambia de 0 a más, o viceversa, redibujamos para cambiarlo de columna automáticamente
+        refreshDashboard();
     }
 }
 
@@ -79,7 +95,7 @@ mediaForm.addEventListener('submit', (e) => {
     const category = document.getElementById('category').value;
     const title = document.getElementById('title').value;
     const progress = document.getElementById('progress').value;
-    const rating = document.getElementById('rating').value; // Captura las estrellas
+    const rating = document.getElementById('rating').value; 
     let image = document.getElementById('image').value;
 
     if (!image) image = 'https://placeholder.com';
@@ -106,7 +122,12 @@ window.deleteJournalItem = function(index) {
 
 // 8. REFRESCAR EL PANEL COMPLETO
 function refreshDashboard() {
+    // Limpiar tarjetas de progreso
     document.querySelectorAll('.media-card-horizontal').forEach(el => el.remove());
+    // Limpiar portadas de la galería dinámica
+    const gallerySection = document.getElementById('want-to-view-gallery');
+    if (gallerySection) gallerySection.innerHTML = '';
+
     const savedItems = JSON.parse(localStorage.getItem('myMediaJournal')) || [];
     savedItems.forEach((item, index) => renderItem(item, index));
 }
@@ -114,15 +135,17 @@ function refreshDashboard() {
 // 9. FUNCIÓN DEL BUSCADOR
 searchBar.addEventListener('input', (e) => {
     const searchText = e.target.value.toLowerCase();
-    const allCards = document.querySelectorAll('.media-card-horizontal');
-
-    allCards.forEach(card => {
+    
+    // Filtrar tarjetas horizontales
+    document.querySelectorAll('.media-card-horizontal').forEach(card => {
         const titleText = card.querySelector('.media-title').innerText.toLowerCase();
-        if (titleText.includes(searchText)) {
-            card.style.display = 'flex';
-        } else {
-            card.style.display = 'none';
-        }
+        card.style.display = titleText.includes(searchText) ? 'flex' : 'none';
+    });
+
+    // Filtrar portadas de la galería
+    document.querySelectorAll('.gallery-card').forEach(card => {
+        const imgAlt = card.querySelector('img').alt.toLowerCase();
+        card.style.display = imgAlt.includes(searchText) ? 'block' : 'none';
     });
 });
 
@@ -168,9 +191,6 @@ window.deleteNote = function(index) {
     renderNotes();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    renderNotes();
-});
 
 
 
